@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace My_Fight_APP.Migrations
 {
-    public partial class initial : Migration
+    public partial class inital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,13 +41,14 @@ namespace My_Fight_APP.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Flight_name = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
-                    Location = table.Column<string>(nullable: true),
+                    Location = table.Column<int>(nullable: false),
                     Destination = table.Column<int>(nullable: false),
                     Travel_date = table.Column<string>(nullable: true),
                     TakeOffTime = table.Column<string>(nullable: true),
                     Flight_duration = table.Column<string>(nullable: true),
                     One_Way_TicketsId = table.Column<int>(nullable: true),
-                    Round_TicketsId = table.Column<int>(nullable: true)
+                    Round_TicketsId = table.Column<int>(nullable: true),
+                    flight_Categories = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

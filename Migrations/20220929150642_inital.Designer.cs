@@ -10,8 +10,8 @@ using My_Fight_APP;
 namespace My_Fight_APP.Migrations
 {
     [DbContext(typeof(FlightDbContext))]
-    [Migration("20220928202525_initial")]
-    partial class initial
+    [Migration("20220929150642_inital")]
+    partial class inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -90,8 +90,8 @@ namespace My_Fight_APP.Migrations
                     b.Property<string>("Flight_name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Location")
+                        .HasColumnType("int");
 
                     b.Property<int?>("One_Way_TicketsId")
                         .HasColumnType("int");
@@ -104,6 +104,9 @@ namespace My_Fight_APP.Migrations
 
                     b.Property<string>("Travel_date")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("flight_Categories")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

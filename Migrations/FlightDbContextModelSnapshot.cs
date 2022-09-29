@@ -88,8 +88,8 @@ namespace My_Fight_APP.Migrations
                     b.Property<string>("Flight_name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Location")
+                        .HasColumnType("int");
 
                     b.Property<int?>("One_Way_TicketsId")
                         .HasColumnType("int");
@@ -102,6 +102,9 @@ namespace My_Fight_APP.Migrations
 
                     b.Property<string>("Travel_date")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("flight_Categories")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -7,7 +7,7 @@ namespace My_Fight_APP.Models
         public int Id { get; set; }
         public string Flight_name { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string Location { get; set; }
+        public Destination Location { get; set; }
         public Destination Destination { get; set; }
         public string Travel_date { get; set; }
         public string TakeOffTime { get; set; }
