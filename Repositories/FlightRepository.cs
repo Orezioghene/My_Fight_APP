@@ -13,10 +13,11 @@ namespace My_Fight_APP.Repositories
             _dbContext = dbContext;
         }
 
-        public ResponseModel BookFlight(Flight_Models model)
+
+        public ResponseModel BookFlight(FlightBookingModel model)
         {
             ResponseModel responseModel = new ResponseModel();  
-            var exist = _dbContext.Set<Flight_Models>().Where(t => t.Id == model.Id &&
+            var exist = _dbContext.Set<FlightBookingModel>().Where(t => t.Id == model.Id &&
                                                                     t.Destination== model.Destination &&
                                                                     t.Location == model.Location &&
                                                                     t.flight_Categories == model.flight_Categories &&
@@ -29,15 +30,41 @@ namespace My_Fight_APP.Repositories
             }
             else
             {
+                if (model.Trip_Type==Trip_type.OneWay)
+                {
+                    model.new_destination=null;
+                    model.new_location=null;
+                    
+                }
+                
                 _dbContext.Add(model);
                 _dbContext.SaveChanges();
             }
             return responseModel;
         }
 
-        public ResponseModel CreateFlight(Flight_Models model)
+        public ResponseModel CreateFlight(FlightModel model)
         {
-            throw new System.NotImplementedException();
+           ResponseModel responseModel= new ResponseModel();
+            var exist = _dbContext.Set<FlightModel>().Where(t => t.Id == model.Id &&
+                                                                    t.FlightName== model.FlightName &&
+                                                                    t.departure == model.departure &&
+                                                                    t.destination == model.destination &&
+                                                                    t.TakeOffTime == model.TakeOffTime &&
+                                                                    t.Travel_date == model.Travel_date
+                                                                    ).ToList();
+
+            if (exist.Count>0)
+            {
+                responseModel.IsSuccessful= false;
+                responseModel.Error="This flight already exists";
+            }
+            else
+            {
+                _dbContext.Add(model);
+                _dbContext.SaveChanges();
+            }
+            return responseModel;
         }
 
         public ResponseModel DeleteFlight(long Id)
@@ -46,7 +73,8 @@ namespace My_Fight_APP.Repositories
            var flightExist = GetFlight(Id);
             if (flightExist != null)
             {
-                _dbContext.Remove(flightExist);
+                //_dbContext.Remove(flightexists);
+                flightExist.Isdeleted = true;
                 _dbContext.SaveChanges();
 
                 responseModel.IsSuccessful = true;
@@ -62,22 +90,48 @@ namespace My_Fight_APP.Repositories
             
         }
 
-        public Flight_Models GetFlight(long Id)
+        public List<FlightBookingModel> GetAllBookings()
         {
-            var flight = _dbContext.Set<Flight_Models>().FirstOrDefault(x => x.Id == Id);
+            var flight = _dbContext.Set<FlightBookingModel>().ToList();
+            return flight;
+        }
+
+        public FlightModel GetFlight(long Id)
+        {
+            var flight = _dbContext.Set<FlightModel>().FirstOrDefault(x => x.Id == Id);
             return flight;
             
         }
 
-        public List<Flight_Models> GetFlights()
+        public List<FlightModel> GetFlights()
         {
-           var flight = _dbContext.Set<Flight_Models>().ToList();
+           var flight = _dbContext.Set<FlightModel>().Where(t=>t.Isdeleted==false).ToList();
             return flight;
         }
 
-        public ResponseModel UpdateFlight(Flight_Models model)
+        public List<FlightModel> GetFlightsByDestination(string Destination)
         {
-            throw new System.NotImplementedException();
+            var flight = _dbContext.Set<FlightModel>().Where(x => x.destination == Destination).ToList();
+            return flight;
+        }
+
+        public ResponseModel UpdateFlight(FlightModel model)
+        {
+            ResponseModel responseModel = new ResponseModel();
+            var exist = _dbContext.Set<FlightModel>().Where(c => c.Id == model.Id).FirstOrDefault();
+            if (exist != null)
+            {
+                _dbContext.Update(model);
+                _dbContext.SaveChanges();
+                responseModel.IsSuccessful=true;
+            }
+            else
+            {
+                responseModel.IsSuccessful=false;
+                responseModel.Error="This flight does not exist";
+            }
+
+            return responseModel;
         }
 
     }

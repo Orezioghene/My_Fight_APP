@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using My_Fight_APP;
 
 namespace My_Fight_APP.Migrations
 {
     [DbContext(typeof(FlightDbContext))]
-    partial class FlightDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221006153930_second ")]
+    partial class second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,9 +42,6 @@ namespace My_Fight_APP.Migrations
 
                     b.Property<int>("Trip_Type")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("flight_Categories")
                         .HasColumnType("int");
@@ -73,9 +72,6 @@ namespace My_Fight_APP.Migrations
 
                     b.Property<string>("Flight_duration")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Isdeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("TakeOffTime")
                         .HasColumnType("nvarchar(max)");

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using My_Fight_APP.Repositories;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,16 @@ namespace My_Fight_APP
             services.AddScoped<IFllightInterface, FlightRepository>();
             services.AddDbContext<FlightDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title ="My Flight App Swagger UI",
+                    Description ="Simple Implementation of swagger",
+                });
+            });
             
         }
 
@@ -44,6 +55,12 @@ namespace My_Fight_APP
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Showing API V1");
+
+            });
 
             app.UseAuthorization();
 

@@ -5,11 +5,13 @@ namespace My_Fight_APP.Repositories
 {
     public interface IFllightInterface
     {
-        public List<Flight_Models> GetFlights();
-        public Flight_Models GetFlight(long Id);
-        ResponseModel BookFlight( Flight_Models model);
-        ResponseModel CreateFlight(Flight_Models model );
-        ResponseModel UpdateFlight( Flight_Models model );
+        public List<FlightModel> GetFlights();
+        public FlightModel GetFlight(long Id);
+        public List<FlightBookingModel> GetAllBookings();
+        public List<FlightModel> GetFlightsByDestination(string Location);
+        ResponseModel BookFlight( FlightBookingModel model);
+        ResponseModel CreateFlight(FlightModel model );
+        ResponseModel UpdateFlight( FlightModel model );
         ResponseModel DeleteFlight( long Id);
     }
 }
