@@ -1,4 +1,6 @@
-﻿using My_Fight_APP.Models;
+﻿using Microsoft.Extensions.Configuration;
+using My_Fight_APP.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,13 +10,20 @@ namespace My_Fight_APP.Repositories
 
     {
         private FlightDbContext _dbContext;
+        private readonly IPaymentInterface _paymentrepo;
+        private readonly IConfiguration _config;
+
+        public FlightRepository(IConfiguration config)
+        {
+            _config = config;
+        }
         public FlightRepository(FlightDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
 
-        public ResponseModel BookFlight(FlightBookingModel model)
+        public  ResponseModel BookFlight(FlightBookingModel model)
         {
             ResponseModel responseModel = new ResponseModel();  
             var exist = _dbContext.Set<FlightBookingModel>().Where(t => t.Id == model.Id &&
@@ -22,6 +31,7 @@ namespace My_Fight_APP.Repositories
                                                                     t.Location == model.Location &&
                                                                     t.flight_Categories == model.flight_Categories &&
                                                                     t.Flight_name ==model.Flight_name).ToList();
+            model.Amount= model.Amount * model.numberOfSeats;
 
             if (exist.Count>0)
             {
@@ -30,6 +40,24 @@ namespace My_Fight_APP.Repositories
             }
             else
             {
+                var rand = new Random();
+                int randnum = rand.Next(1000);
+                var tx_ref = $"Flight-{randnum}-{DateTime.Now}";
+                var sendPayment = new PaymentRequestModel()
+                {
+                    amount = model.Amount,
+                    currency = "NGN",
+                    customer = new Customer()
+                    {
+                        email= model.email,
+                        name = model.UserName,
+                        phonenumber = model.PhoneNumber
+                    },
+                    redirect_url ="https://localhost:4002",
+                    tx_ref = tx_ref
+                };
+                var request = _paymentrepo.makepayment(sendPayment).Result;
+
                 if (model.Trip_Type==Trip_type.OneWay)
                 {
                     model.new_destination=null;
@@ -39,6 +67,7 @@ namespace My_Fight_APP.Repositories
                 
                 _dbContext.Add(model);
                 _dbContext.SaveChanges();
+                responseModel.Error= request.data.link;
             }
             return responseModel;
         }
@@ -89,6 +118,11 @@ namespace My_Fight_APP.Repositories
             return responseModel;
             
         }
+        public FlightBookingModel GetBooking(string Username)
+        {
+            var flight = _dbContext.Set<FlightBookingModel>().FirstOrDefault(x => x.UserName == Username);
+            return flight;
+        }
 
         public List<FlightBookingModel> GetAllBookings()
         {
@@ -134,5 +168,46 @@ namespace My_Fight_APP.Repositories
             return responseModel;
         }
 
+        public ResponseModel CancelBooking(string Username)
+        {
+
+            ResponseModel responseModel = new ResponseModel();
+            var flightExist = GetBooking(Username);
+            if (flightExist != null)
+            {
+                //_dbContext.Remove(flightexists);
+                flightExist.Isdeleted = true;
+                _dbContext.SaveChanges();
+
+                responseModel.IsSuccessful = true;
+                responseModel.Error="Booking has been cancelled";
+            }
+            else
+            {
+                responseModel.IsSuccessful = false;
+                responseModel.Error="This username doesn't exist under any booking";
+            }
+
+            return responseModel;
+        }
+
+        public ResponseModel CorrectBooking(FlightBookingModel model)
+        {
+            ResponseModel responseModel = new ResponseModel();
+            var exist = _dbContext.Set<FlightBookingModel>().Where(c => c.Id == model.Id).FirstOrDefault();
+            if (exist != null)
+            {
+                _dbContext.Update(model);
+                _dbContext.SaveChanges();
+                responseModel.IsSuccessful=true;
+            }
+            else
+            {
+                responseModel.IsSuccessful=false;
+                responseModel.Error="This booking does not exist";
+            }
+
+            return responseModel;
+        }
     }
 }

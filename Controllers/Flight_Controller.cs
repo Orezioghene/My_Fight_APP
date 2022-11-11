@@ -40,20 +40,20 @@ namespace My_Fight_APP.Controllers
         public IActionResult GetBookings()
         {
             var bookings = _flightinterface.GetAllBookings();
-            if(bookings == null) { return NotFound(); }
+            if (bookings == null) { return NotFound(); }
             return Ok(bookings);
         }
 
-        [HttpGet("{destination}")]
-        public IActionResult FlightByLocation(string Location)
+        [HttpGet("{location}")]
+        public IActionResult FlightByLocation(string location)
         {
-            var flightbylocation = _flightinterface.GetFlightsByDestination(Location);
-            if(flightbylocation == null) { return NotFound(); }
+            var flightbylocation = _flightinterface.GetFlightsByDestination(location);
+            if (flightbylocation == null) { return NotFound(); }
             return Ok(flightbylocation);
         }
 
         [HttpPost("BookFlight")]
-        public IActionResult BookFlight(FlightBookingModel bookingModel )
+        public IActionResult BookFlight(FlightBookingModel bookingModel)
         {
             var bookflight = _flightinterface.BookFlight(bookingModel);
             if (bookflight.IsSuccessful==true)
@@ -66,7 +66,7 @@ namespace My_Fight_APP.Controllers
         [HttpPost("CreateFlight")]
         public IActionResult CreateFlight(FlightModel createflightmodel)
         {
-            if (!ModelState.IsValid) { return BadRequest("Ensure right pattern and datatype is followed");} ;
+            if (!ModelState.IsValid) { return BadRequest("Ensure right pattern and datatype is followed"); };
             var createflight = _flightinterface.CreateFlight(createflightmodel);
             if (createflight.IsSuccessful==true)
             {
@@ -82,6 +82,35 @@ namespace My_Fight_APP.Controllers
 
         }
 
-        
+        [HttpDelete("CancelBooking")]
+        public IActionResult CancelFlight(string Username)
+        {
+            var delete = _flightinterface.CancelBooking(Username);
+            return Ok(delete);
+
+        }
+
+        [HttpPut("{Id}")]
+        public IActionResult CorrectBooking(long Id , FlightBookingModel bookingModel)
+        {
+            var exists = _flightinterface.GetFlight(Id);
+            if (exists == null)
+            {
+                return NotFound();
+
+            }
+            else
+            {
+                bookingModel.Id=exists.Id;
+                var correctbooking = _flightinterface.CorrectBooking(bookingModel);
+                return Ok(correctbooking);
+            }
+           
+        }
+
+
+
+
+
     }
 }
