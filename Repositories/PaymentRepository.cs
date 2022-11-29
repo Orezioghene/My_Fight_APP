@@ -13,14 +13,12 @@ namespace My_Fight_APP.Repositories
         private FlightDbContext _dbContext;
         private readonly IConfiguration _config;
 
-        public PaymentRepository(IConfiguration config)
+        public PaymentRepository(IConfiguration config, FlightDbContext dbContext)
         {
             _config = config;
-        }
-        public PaymentRepository(FlightDbContext dbContext)
-        {
             _dbContext = dbContext;
         }
+        
 
         //public async FlutterwaveResponse makepayment(PaymentModel payment)
         //{

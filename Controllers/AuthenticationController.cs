@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace My_Fight_APP.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {

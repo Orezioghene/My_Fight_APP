@@ -4,6 +4,8 @@ using My_Fight_APP.Repositories;
 
 namespace My_Fight_APP.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class Flight_Controller : ControllerBase
     {
         private readonly IFllightInterface _flightinterface;

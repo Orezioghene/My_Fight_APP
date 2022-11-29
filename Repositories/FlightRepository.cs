@@ -13,14 +13,12 @@ namespace My_Fight_APP.Repositories
         private readonly IPaymentInterface _paymentrepo;
         private readonly IConfiguration _config;
 
-        public FlightRepository(IConfiguration config)
+        public FlightRepository(IConfiguration config, FlightDbContext dbContext)
         {
             _config = config;
-        }
-        public FlightRepository(FlightDbContext dbContext)
-        {
             _dbContext = dbContext;
         }
+      
 
 
         public  ResponseModel BookFlight(FlightBookingModel model)
