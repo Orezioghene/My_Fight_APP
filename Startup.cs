@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using My_Fight_APP.Models;
 using My_Fight_APP.Repositories;
 using System;
 using System.Collections.Generic;
@@ -48,6 +50,22 @@ namespace My_Fight_APP
                     Description ="Simple Implementation of swagger",
                 });
             });
+
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+            .AddEntityFrameworkStores<FlightDbContext>()
+             .AddDefaultTokenProviders();
+            //  services.AddIdentity<User>(opt =>
+            //  {
+            //      opt.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+            //  })
+            //.AddDefaultTokenProviders()
+            //.AddEntityFrameworkStores<FlightDbContext>()
+            ////.AddRoleManager<RoleManager<UserRoles>>()
+            //.AddSignInManager<SignInManager<User>>()
+            //.AddUserManager<UserManager<User>>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,6 +87,7 @@ namespace My_Fight_APP
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
+
 
         }
 

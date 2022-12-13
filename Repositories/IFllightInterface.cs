@@ -1,5 +1,6 @@
 ﻿using My_Fight_APP.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace My_Fight_APP.Repositories
 {
@@ -10,9 +11,9 @@ namespace My_Fight_APP.Repositories
         public FlightBookingModel GetBooking(string Username);
         public List<FlightBookingModel> GetAllBookings();
         public List<FlightModel> GetFlightsByDestination(string Location);
-        ResponseModel BookFlight( FlightBookingModel model);
+        Task<ResponseModel> BookFlight( FlightBookingViewModel model);
         ResponseModel CorrectBooking ( FlightBookingModel model);
-        ResponseModel CreateFlight(FlightModel model );
+        ResponseModel CreateFlight(FlightViewModel model );
         ResponseModel UpdateFlight( FlightModel model );
         ResponseModel DeleteFlight( long Id);
         ResponseModel CancelBooking(string Username);

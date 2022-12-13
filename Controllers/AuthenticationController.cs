@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -50,12 +51,12 @@ namespace My_Fight_APP.Controllers
                 SecurityStamp= Guid.NewGuid().ToString()
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { IsSuccessful=false, Error ="new user could not be created and retry" });
-            //return Ok(new ResponseModel { Error="Success", IsSuccessful=true });
+            if (!result.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel { IsSuccessful=false, Error =$"{result.Errors.ToString()}" });
+            
 
 
-            if(!await _roleManager.RoleExistsAsync(UserRoles.Admin));
-            await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            //if(!await _roleManager.RoleExistsAsync(UserRoles.Admin));
+            //await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
             if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
@@ -64,6 +65,7 @@ namespace My_Fight_APP.Controllers
             return Ok(new ResponseModel { Error="New Admin Created", IsSuccessful=true });
         }
 
+        //[Authorize]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {

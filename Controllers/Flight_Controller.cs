@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using My_Fight_APP.Models;
 using My_Fight_APP.Repositories;
+using System.Threading.Tasks;
 
 namespace My_Fight_APP.Controllers
 {
@@ -26,7 +27,7 @@ namespace My_Fight_APP.Controllers
 
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("GetFlightbyId/{Id}")]
         public IActionResult GetFlight(long Id)
         {
             var flight = _flightinterface.GetFlight(Id);
@@ -37,6 +38,16 @@ namespace My_Fight_APP.Controllers
             }
             return Ok(flight);
         }
+        [HttpGet("GetBooking/{Username}")]
+        public IActionResult GetBooking(string Username)
+        {
+            var booking = _flightinterface.GetBooking(Username);
+            if(booking == null)
+            {
+                return NotFound();
+            }
+            return Ok(booking);
+        }
 
         [HttpGet("AllBookings")]
         public IActionResult GetBookings()
@@ -46,18 +57,18 @@ namespace My_Fight_APP.Controllers
             return Ok(bookings);
         }
 
-        [HttpGet("{location}")]
-        public IActionResult FlightByLocation(string location)
+        [HttpGet("FlightByDestination/{destination}")]
+        public IActionResult FlightByLocation(string destination)
         {
-            var flightbylocation = _flightinterface.GetFlightsByDestination(location);
+            var flightbylocation = _flightinterface.GetFlightsByDestination(destination);
             if (flightbylocation == null) { return NotFound(); }
             return Ok(flightbylocation);
         }
 
         [HttpPost("BookFlight")]
-        public IActionResult BookFlight(FlightBookingModel bookingModel)
+        public async Task<IActionResult> BookFlight(FlightBookingViewModel bookingModel)
         {
-            var bookflight = _flightinterface.BookFlight(bookingModel);
+            var bookflight = await  _flightinterface.BookFlight(bookingModel);
             if (bookflight.IsSuccessful==true)
             {
                 return Ok(bookflight);
@@ -66,7 +77,7 @@ namespace My_Fight_APP.Controllers
         }
 
         [HttpPost("CreateFlight")]
-        public IActionResult CreateFlight(FlightModel createflightmodel)
+        public IActionResult CreateFlight(FlightViewModel createflightmodel)
         {
             if (!ModelState.IsValid) { return BadRequest("Ensure right pattern and datatype is followed"); };
             var createflight = _flightinterface.CreateFlight(createflightmodel);
@@ -76,7 +87,7 @@ namespace My_Fight_APP.Controllers
             }
             return BadRequest();
         }
-        [HttpDelete("Id")]
+        [HttpDelete("deleteflight/Id")]
         public IActionResult DeleteFlight(long Id)
         {
             var delete = _flightinterface.DeleteFlight(Id);
@@ -92,7 +103,7 @@ namespace My_Fight_APP.Controllers
 
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("correctbooking/{Id}")]
         public IActionResult CorrectBooking(long Id , FlightBookingModel bookingModel)
         {
             var exists = _flightinterface.GetFlight(Id);
@@ -110,6 +121,22 @@ namespace My_Fight_APP.Controllers
            
         }
 
+        [HttpPut("updateflight/{id}")]
+        public IActionResult UpdateFlight(long Id, FlightModel flight)
+        {
+            var exists = _flightinterface.GetFlight(Id);
+            if(exists ==null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                flight.Id=exists.Id;
+                var updateflight = _flightinterface.UpdateFlight(flight);
+                return Ok(updateflight);
+                
+            }
+        }
 
 
 

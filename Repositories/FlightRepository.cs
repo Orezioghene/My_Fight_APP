@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using My_Fight_APP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace My_Fight_APP.Repositories
 {
@@ -13,18 +15,20 @@ namespace My_Fight_APP.Repositories
         private readonly IPaymentInterface _paymentrepo;
         private readonly IConfiguration _config;
 
-        public FlightRepository(IConfiguration config, FlightDbContext dbContext)
+        public FlightRepository(IConfiguration config, FlightDbContext dbContext, IPaymentInterface paymentrepo)
         {
             _config = config;
             _dbContext = dbContext;
+            _paymentrepo = paymentrepo;
         }
       
 
 
-        public  ResponseModel BookFlight(FlightBookingModel model)
+        public async Task<ResponseModel>   BookFlight(FlightBookingViewModel model)
         {
-            ResponseModel responseModel = new ResponseModel();  
-            var exist = _dbContext.Set<FlightBookingModel>().Where(t => t.Id == model.Id &&
+            ResponseModel responseModel = new ResponseModel();
+            var linkid=_dbContext.Set<FlightModel>().Where(t => t.TripAmount == model.Amount);
+            var exist = _dbContext.Set<FlightBookingModel>().Where(t => 
                                                                     t.Destination== model.Destination &&
                                                                     t.Location == model.Location &&
                                                                     t.flight_Categories == model.flight_Categories &&
@@ -41,6 +45,27 @@ namespace My_Fight_APP.Repositories
                 var rand = new Random();
                 int randnum = rand.Next(1000);
                 var tx_ref = $"Flight-{randnum}-{DateTime.Now}";
+                var newUser = new FlightBookingModel()
+                {
+                    Name = model.Name,
+                    PhoneNumber = model.PhoneNumber,
+                    email = model.email,
+                    UserName = model.UserName,
+                    Amount = model.Amount,
+                    CreatedOn = DateTime.Now,   
+                    new_destination = model.Destination,
+                    Destination = model.Destination,
+                    Location = model.Location,
+                    Flight_name = model.Flight_name,
+                    
+                    numberOfSeats = model.numberOfSeats,
+                    PaymentStatus = model.PaymentStatus,
+                    flight_Categories = model.flight_Categories,
+                    new_location = model.Location,
+                    Trip_Type = model.Trip_Type,    
+
+
+                };
                 var sendPayment = new PaymentRequestModel()
                 {
                     amount = model.Amount,
@@ -54,7 +79,7 @@ namespace My_Fight_APP.Repositories
                     redirect_url ="https://localhost:4002",
                     tx_ref = tx_ref
                 };
-                var request = _paymentrepo.makepayment(sendPayment).Result;
+                var request = await _paymentrepo.makepayment(sendPayment);
 
                 if (model.Trip_Type==Trip_type.OneWay)
                 {
@@ -63,23 +88,38 @@ namespace My_Fight_APP.Repositories
                     
                 }
                 
-                _dbContext.Add(model);
+                _dbContext.Add(newUser);
                 _dbContext.SaveChanges();
+                responseModel.IsSuccessful=true;
                 responseModel.Error= request.data.link;
             }
             return responseModel;
         }
-
-        public ResponseModel CreateFlight(FlightModel model)
+        //[Authorize]
+        public ResponseModel CreateFlight(FlightViewModel model)
         {
            ResponseModel responseModel= new ResponseModel();
-            var exist = _dbContext.Set<FlightModel>().Where(t => t.Id == model.Id &&
+            var exist = _dbContext.Set<FlightModel>().Where(t => 
                                                                     t.FlightName== model.FlightName &&
                                                                     t.departure == model.departure &&
                                                                     t.destination == model.destination &&
                                                                     t.TakeOffTime == model.TakeOffTime &&
                                                                     t.Travel_date == model.Travel_date
                                                                     ).ToList();
+            var newFlight = new FlightModel()
+            {
+                FlightName = model.FlightName,
+                departure = model.departure,
+                destination = model.destination,
+                TakeOffTime = model.TakeOffTime,
+                Travel_date = model.Travel_date,
+                AllowRoundTrip= model.AllowRoundTrip,
+                Flight_duration= model.Flight_duration,
+                TripAmount=model.TripAmount,
+
+
+
+            };
 
             if (exist.Count>0)
             {
@@ -88,12 +128,15 @@ namespace My_Fight_APP.Repositories
             }
             else
             {
-                _dbContext.Add(model);
+                _dbContext.Add(newFlight);
                 _dbContext.SaveChanges();
+                responseModel.IsSuccessful= true;
+                responseModel.Error="Flight Created";
             }
             return responseModel;
         }
 
+        [Authorize]
         public ResponseModel DeleteFlight(long Id)
         {
             ResponseModel responseModel = new ResponseModel();
@@ -116,12 +159,14 @@ namespace My_Fight_APP.Repositories
             return responseModel;
             
         }
+        [Authorize]
         public FlightBookingModel GetBooking(string Username)
         {
             var flight = _dbContext.Set<FlightBookingModel>().FirstOrDefault(x => x.UserName == Username);
             return flight;
         }
 
+        [Authorize]
         public List<FlightBookingModel> GetAllBookings()
         {
             var flight = _dbContext.Set<FlightBookingModel>().ToList();
@@ -130,15 +175,12 @@ namespace My_Fight_APP.Repositories
 
         public FlightModel GetFlight(long Id)
         {
-            var flight = _dbContext.Set<FlightModel>().FirstOrDefault(x => x.Id == Id);
-            return flight;
-            
+            return _dbContext.Set<FlightModel>().FirstOrDefault(x => x.Id == Id);                       
         }
 
         public List<FlightModel> GetFlights()
         {
-           var flight = _dbContext.Set<FlightModel>().Where(t=>t.Isdeleted==false).ToList();
-            return flight;
+            return _dbContext.Set<FlightModel>().Where(t=>t.Isdeleted==false).ToList();            
         }
 
         public List<FlightModel> GetFlightsByDestination(string Destination)
@@ -147,6 +189,7 @@ namespace My_Fight_APP.Repositories
             return flight;
         }
 
+        [Authorize]
         public ResponseModel UpdateFlight(FlightModel model)
         {
             ResponseModel responseModel = new ResponseModel();
