@@ -52,7 +52,7 @@ namespace My_Fight_APP.Migrations
                     departure = table.Column<string>(nullable: true),
                     destination = table.Column<string>(nullable: true),
                     AllowRoundTrip = table.Column<bool>(nullable: false),
-                    TripAmount = table.Column<string>(nullable: true),
+                    TripAmount = table.Column<decimal>(nullable: true),
                     Travel_date = table.Column<string>(nullable: true),
                     TakeOffTime = table.Column<string>(nullable: true),
                     Flight_duration = table.Column<string>(nullable: true)

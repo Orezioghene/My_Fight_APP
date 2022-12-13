@@ -7,7 +7,7 @@ namespace My_Fight_APP.Models
             //public int Id { get; set; }
             public string UserName { get; set; }
             public string Flight_name { get; set; }
-            public DateTime CreatedOn { get; set; } = DateTime.Now;
+            public DateTime CreatedOn { get; set; } = DateTime.Now.Date;
             public string Location { get; set; }
             public string Destination { get; set; }
             public Flight_Categories flight_Categories { get; set; }

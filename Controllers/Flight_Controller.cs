@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using My_Fight_APP.Models;
 using My_Fight_APP.Repositories;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 namespace My_Fight_APP.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class Flight_Controller : ControllerBase
     {
@@ -14,7 +16,7 @@ namespace My_Fight_APP.Controllers
         {
             _flightinterface = fllightInterface;
         }
-
+        [AllowAnonymous]
         [HttpGet("GetAllflights")]
         public IActionResult GetAllFlights()
         {
@@ -26,7 +28,7 @@ namespace My_Fight_APP.Controllers
             return Ok(flights);
 
         }
-
+        [AllowAnonymous]
         [HttpGet("GetFlightbyId/{Id}")]
         public IActionResult GetFlight(long Id)
         {
@@ -38,6 +40,7 @@ namespace My_Fight_APP.Controllers
             }
             return Ok(flight);
         }
+        [AllowAnonymous]
         [HttpGet("GetBooking/{Username}")]
         public IActionResult GetBooking(string Username)
         {
@@ -56,7 +59,7 @@ namespace My_Fight_APP.Controllers
             if (bookings == null) { return NotFound(); }
             return Ok(bookings);
         }
-
+        [AllowAnonymous]
         [HttpGet("FlightByDestination/{destination}")]
         public IActionResult FlightByLocation(string destination)
         {
@@ -64,7 +67,7 @@ namespace My_Fight_APP.Controllers
             if (flightbylocation == null) { return NotFound(); }
             return Ok(flightbylocation);
         }
-
+        [AllowAnonymous]
         [HttpPost("BookFlight")]
         public async Task<IActionResult> BookFlight(FlightBookingViewModel bookingModel)
         {
@@ -94,7 +97,7 @@ namespace My_Fight_APP.Controllers
             return Ok(delete);
 
         }
-
+        [AllowAnonymous]
         [HttpDelete("CancelBooking")]
         public IActionResult CancelFlight(string Username)
         {
@@ -102,7 +105,7 @@ namespace My_Fight_APP.Controllers
             return Ok(delete);
 
         }
-
+        [AllowAnonymous]
         [HttpPut("correctbooking/{Id}")]
         public IActionResult CorrectBooking(long Id , FlightBookingModel bookingModel)
         {

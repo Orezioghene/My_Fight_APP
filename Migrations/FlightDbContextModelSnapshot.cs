@@ -235,8 +235,8 @@ namespace My_Fight_APP.Migrations
                     b.Property<string>("Travel_date")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TripAmount")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("TripAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("departure")
                         .HasColumnType("nvarchar(max)");

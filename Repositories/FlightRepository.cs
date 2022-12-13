@@ -32,7 +32,9 @@ namespace My_Fight_APP.Repositories
                                                                     t.Destination== model.Destination &&
                                                                     t.Location == model.Location &&
                                                                     t.flight_Categories == model.flight_Categories &&
-                                                                    t.Flight_name ==model.Flight_name).ToList();
+                                                                    t.Flight_name ==model.Flight_name &&
+                                                                    t.CreatedOn == model.CreatedOn).ToList()
+                                                                    ;
             model.Amount= model.Amount * model.numberOfSeats;
 
             if (exist.Count>0)
@@ -52,7 +54,7 @@ namespace My_Fight_APP.Repositories
                     email = model.email,
                     UserName = model.UserName,
                     Amount = model.Amount,
-                    CreatedOn = DateTime.Now,   
+                    CreatedOn = DateTime.Now.Date,   
                     new_destination = model.Destination,
                     Destination = model.Destination,
                     Location = model.Location,

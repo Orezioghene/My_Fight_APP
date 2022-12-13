@@ -10,8 +10,8 @@ using My_Fight_APP;
 namespace My_Fight_APP.Migrations
 {
     [DbContext(typeof(FlightDbContext))]
-    [Migration("20221208192321_View model")]
-    partial class Viewmodel
+    [Migration("20221213172317_amount correction")]
+    partial class amountcorrection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -238,7 +238,7 @@ namespace My_Fight_APP.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TripAmount")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("departure")
                         .HasColumnType("nvarchar(max)");

@@ -79,7 +79,7 @@ namespace My_Fight_APP.Migrations
                     b.Property<string>("Travel_date")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TripAmount")
+                    b.Property<decimal>("TripAmount")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("departure")
