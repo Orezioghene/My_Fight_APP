@@ -93,7 +93,8 @@ namespace My_Fight_APP.Repositories
                 _dbContext.Add(newUser);
                 _dbContext.SaveChanges();
                 responseModel.IsSuccessful=true;
-                responseModel.Error= request.data.link;
+                responseModel.Error=null;
+                responseModel.Data = request.data.link;
             }
             return responseModel;
         }
@@ -133,7 +134,8 @@ namespace My_Fight_APP.Repositories
                 _dbContext.Add(newFlight);
                 _dbContext.SaveChanges();
                 responseModel.IsSuccessful= true;
-                responseModel.Error="Flight Created";
+                responseModel.Error = null;
+                responseModel.Data="Flight Created";
             }
             return responseModel;
         }
@@ -150,7 +152,8 @@ namespace My_Fight_APP.Repositories
                 _dbContext.SaveChanges();
 
                 responseModel.IsSuccessful = true;
-                responseModel.Error="Flight has been deleted";
+                responseModel.Error = null;
+                responseModel.Data ="Flight has been deleted";
             }
             else
             {
@@ -223,7 +226,8 @@ namespace My_Fight_APP.Repositories
                 _dbContext.SaveChanges();
 
                 responseModel.IsSuccessful = true;
-                responseModel.Error="Booking has been cancelled";
+                responseModel.Error = null;
+                responseModel.Data="Booking has been cancelled";
             }
             else
             {
