@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3hdzfFByN0w481Ym05cP8HIqmEBWdCEpDzhuuHC6Hwz7vadW8EbTJYrssrioIFp49mNm1tD1Uv7M58gmhe377w==",
+  "dgSpecHash": "JHEPp39GQ/IC0QYPQoK6jE3VGEojpCyQRMd4mCuEiJppl4DZDIqGg8bhcamqQrWsNddQ7SzvoHJ2w6s0qdDnqQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Cyberspace\\Source\\Repos\\My_Fight_APP\\My_Fight_APP.csproj",
+  "projectFilePath": "C:\\Users\\Cyberspace\\source\\repos\\My_Fight_APP\\My_Fight_APP.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Cyberspace\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Users\\Cyberspace\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
