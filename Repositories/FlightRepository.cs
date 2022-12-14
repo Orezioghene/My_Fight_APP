@@ -174,7 +174,7 @@ namespace My_Fight_APP.Repositories
         [Authorize]
         public List<FlightBookingModel> GetAllBookings()
         {
-            var flight = _dbContext.Set<FlightBookingModel>().ToList();
+            var flight = _dbContext.Set<FlightBookingModel>().Where(f=>f.Isdeleted ==false).ToList();
             return flight;
         }
 
